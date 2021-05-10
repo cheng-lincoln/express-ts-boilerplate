@@ -3,8 +3,14 @@ import { RegisterRoutes } from "../build/routes";
 import swaggerUi from "swagger-ui-express";
 import { ValidateError } from "tsoa";
 import morgan from "morgan";
+import compression from "compression";
+import helmet from "helmet";
 
 export const app = express();
+
+app.use(compression());
+
+app.use(helmet());
 
 app.use(morgan("tiny"));
 
