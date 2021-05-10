@@ -17,8 +17,6 @@ export class DummyController extends Controller {
       return oddCountErr(403, { message: "Odd number of pings are not allowed." });
     }
 
-    console.log("");
-
     return new DummyService().getPongs(count);
   }
 }
