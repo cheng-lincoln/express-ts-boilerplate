@@ -11,7 +11,9 @@
     "test": "jest"
   },
   "jest": {
-    "preset": "ts-jest"
+    "preset": "ts-jest",
+    "verbose": true,
+    "testPathIgnorePatterns": ["build"]
   },
   "repository": {
     "type": "git",
