@@ -1,166 +1,94 @@
-Prerequisite
-
-- vscode - with eslint extension
-- git
-- node, npm
-
 # Overview
 
-1.1) How to initialize the repository
+This is a boilerplate for an express microservice with the following features:
 
-- git clone
-- npm ci
-- npm run build
-- npm run dev
-
-1.2) How to integrate with vscode
-
-- After opening in vscode, make sure to enable eslint (open any ts file and check the bottom right of the vscode window)
-
-  
-
-2) How to add endpoint
-
-- Service, Controller, Models
-
-- put model into models folder
-
-- put controller into controllers folder
-
-- example controller
-
-  ```typescript
-  @Route("ping")
-  export class PingController extends Controller {
-    @Get("/simple")
-    public async pingSimple(
-      @Query() passphrase: number
-    ): Promise<{}> {
-      return { message: passphrase };
-    }
-  
-    @Post("/complex")
-    public async pingComplex(
-      @Body() passphrase: ComplexPassphrase,
-    ): Promise<{}> {
-      return { message: passphrase };
-    }
-  }
-  ```
-
-  
-
-3) How to handle errors
-
-- Generic Errors
-
-  ```typescript
-  app.use(
-      function errorHandler(
-          err: unknown,
-          req: ExRequest,
-          res: ExResponse,
-          next: NextFunction
-      ): ExResponse | void {
-          // Validation Errors caught by tsoa
-          if (err instanceof ValidateError) {
-              console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
-              return res.status(422).json({
-                  message: "Validation Failed",
-                  details: err?.fields,
-              });
-          }
-  
-          // Generic uncaught Errors
-          if (err instanceof Error) {
-              return res.status(500).json({
-                  message: "Internal Server Error",
-              });
-          }
-  
-          next();
-      });
-  ```
-
-  
-
-- Custom Errors
-
-  ```typescript
-    public async pingSimple(
-      @Query() passphrase: number,
-      @Res() tenErrorResponse: TsoaResponse<423, { unlucky: string }>
-    ): Promise<{}> {
-      if (passphrase === 10) {
-        return tenErrorResponse(423, { unlucky: "10 is an unlucky number" });
-      }
-  
-      return { message: passphrase };
-    }
-  ```
+- Typescript
+- [Service-Model-Controller pattern with OpenAPI (auto-generated Swagger docs)](#openapi)
+- [Error Handling](#error-handling)
+- [Logging](#logging)
+- [Unit Tests](#tests)
+- Auto-Reload
+- Environment Variables
+- Docker Build
+- [VSCode Integration (optional)](#Integration-with-vscode-(optional))
 
 
 
-4) Documenting Endpoints
+## Pre-Requisites
 
-- Examples, Descriptions, Error Examples
-
-https://tsoa-community.github.io/docs/descriptions.html
-
-https://tsoa-community.github.io/docs/examples.html
+- Node, NPM, and Git installed
 
 
 
-5) Logging
+## Initializing the Repository
 
-- default logger is in loggers folder
+```bash
+git clone
+npm ci
+npm run build # This generates the build folders with OpenAPI (swagger) routes
+npm run dev
 
-- it will output logs to console and logs folder
+# If not required, remove example controllers, services, and models
+rm -f src/controllers/DummyController.ts
+rm -f src/models/DummyModel.ts
+rm -f src/services/DummyService.ts
+```
 
-- to use default logger
 
-  ```typescript
-  import Logger from "../loggers/default";
-  ```
 
-  ```typescript
-      Logger.error("This is an error log");
-      Logger.warn("This is a warn log");
-      Logger.info("This is a info log");
-      Logger.http("This is a http log");
-      Logger.debug("This is a debug log");
-  ```
+### Integration with VSCode (optional)
 
-  ```
-  2021-04-28 14:28:52:2852 error: This is an error log
-  2021-04-28 14:28:52:2852 warn: This is a warn log
-  2021-04-28 14:28:52:2852 info: This is a info log
-  2021-04-28 14:28:52:2852 http: This is a http log
-  2021-04-28 14:28:52:2852 debug: This is a debug log
-  ```
+1) Install the `ESLint` extension.
 
-  
+2) Open any `.ts` file and click the "ESLint" button in the bottom right the VSCode window.
 
-6) Unit testing
 
-- example
 
-  ```typescript
-  describe("sample unit test", () => {
-    it('test', () => {
-      const response = addNumber(1,1);   // replace addNumber fn with fn that you want to test
-      expect(response).toEqual(2)        // assert result
-    })
-  });
-  ```
+## OpenAPI
 
-- to run test locally
+`tsoa` is used to automatically generate routes and Swagger docs in the `build` directory.
 
-  ```bash
-  npm run test
-  ```
+Access the swagger docs at the `/docs` url.
 
-  
+
+
+## Error Handling
+
+See `app.ts` and `src/controllers/DummyController.ts` for catching generic and specific errors respectively.
+
+
+
+## Logging
+
+`morgan` logs requests automatically.
+
+`winston` is used for custom logging. A default logger is created in `src/loggers/default.ts`. Create new loggers or modify the existing one, and then import them to use them.
+
+```typescript
+import Logger from "../loggers/default";
+
+Logger.error("This is an error log");
+Logger.warn("This is a warn log");
+Logger.info("This is a info log");
+Logger.http("This is a http log");
+Logger.debug("This is a debug log");
+```
+
+The default logger logs both to `console` and to a directory configurable in `.env` file at the root directory.
+
+
+
+## Unit Tests
+
+`jest` is used for unit testing. It will look for tests in the `tests` directory.
+
+To run unit tests:
+
+```bash
+npm run test
+```
+
+
 
 # References
 
