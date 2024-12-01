@@ -1,5 +1,5 @@
 {
-  "name": "backend-express",
+  "name": "express-ts-boilerplate",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,9 @@
     "build": "tsoa spec-and-routes && tsc",
     "start": "node build/src/server.js",
     "lint": "eslint --fix --ext ts src/",
-    "test": "jest"
+    "test": "jest",
+    "docker:build": "docker build -t express-ts-boilerplate .",
+    "docker:run": "docker run -it -p 8080:8080 express-ts-boilerplate"
   },
   "jest": {
     "preset": "ts-jest",
@@ -17,14 +19,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/pandawaewae/backend-express.git"
+    "url": "git@github.com:cheng-lincoln/express-ts-boilerplate.git"
   },
-  "author": "",
+  "author": "Lincoln Cheng",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/pandawaewae/backend-express/issues"
+    "url": "https://github.com/cheng-lincoln/express-ts-boilerplate/issues"
   },
-  "homepage": "https://gitlab.com/pandawaewae/backend-express#readme",
+  "homepage": "https://github.com/cheng-lincoln/express-ts-boilerplate",
   "dependencies": {
     "compression": "^1.7.4",
     "dotenv": "^8.2.0",
